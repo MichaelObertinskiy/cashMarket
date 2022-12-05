@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table
+@Table(name="users")
 @Data
 @ToString(of = {"firstName", "lastName"})
 public class User {
@@ -19,21 +19,23 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonView(Views.Id.class)
     private Integer id;
+    @GeneratedValue(generator = "UUID")
+    @Column(name = "uuid", updatable = false, nullable = false, columnDefinition = "VARCHAR(255)")
     private UUID uuid;
     private String code;
     private String firstName;
     private String lastName;
     private String phone;
 
-    @Column(updatable = false)
+    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
-    @Column(updatable = false)
+    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
-    @Column(updatable = false)
+    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime deletedAt;
 

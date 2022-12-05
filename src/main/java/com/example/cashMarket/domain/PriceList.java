@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Entity
-@Table
+@Table(name = "price_lists")
 @Data
 @ToString(of = {"id",})
 @EqualsAndHashCode(of = {"id"})
@@ -22,22 +22,24 @@ public class PriceList {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-
+    @GeneratedValue(generator = "UUID")
+    @Column(name = "uuid", updatable = false, nullable = false, columnDefinition = "VARCHAR(255)")
     private UUID uuid;
     private Integer userId;
+    @Column(length = 10000)
     private String commoditiesListId;
     private Float totalPrice;
     private Integer amountOfPositions;
 
-    @Column(updatable = false)
+    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
-    @Column(updatable = false)
+    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
-    @Column(updatable = false)
+    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime deletedAt;
 
