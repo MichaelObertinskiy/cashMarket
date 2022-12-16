@@ -19,15 +19,11 @@ import java.util.UUID;
 public class Commodity {
 
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.AUTO
-    )
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-
-
     
     @Column(name = "uuid", updatable = false, columnDefinition = "VARCHAR(255)")
-    private UUID uuid;
+    private String uuid;
     @Column(name = "barcode")
     private String barcode;
     @Column(name = "name")
@@ -44,7 +40,7 @@ public class Commodity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
-    @Column(updatable = false, columnDefinition = "TIMESTAMP")
+    @Column(columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
@@ -58,7 +54,7 @@ public class Commodity {
 
     public Commodity(
             Integer id,
-            UUID uuid,
+            String uuid,
             String barcode,
             String name,
             String taxgroup,
@@ -110,11 +106,11 @@ public class Commodity {
         this.id = id;
     }
 
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(UUID uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 

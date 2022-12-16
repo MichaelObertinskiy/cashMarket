@@ -59,27 +59,21 @@ public class ExcelHelper {
                         case 0:
                             commodity.setName(currentCell.getStringCellValue());
                             break;
-
                         case 1:
                             commodity.setBarcode(currentCell.getStringCellValue());
                             break;
-
                         case 2:
                             commodity.setTaxgroup(currentCell.getStringCellValue());
                             break;
-
                         case 3:
                             commodity.setGroupOfGoods(currentCell.getStringCellValue());
                             break;
-
                         case 4:
                             commodity.setTrademark(currentCell.getStringCellValue());
                             break;
-
                         case 5:
                             commodity.setCost(currentCell.getNumericCellValue());
                             break;
-
                         default:
                             break;
                     }

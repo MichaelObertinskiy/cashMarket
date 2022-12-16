@@ -3,14 +3,13 @@ package com.example.cashMarket.service;
 import com.example.cashMarket.domain.Commodity;
 import com.example.cashMarket.repo.CommodityRepo;
 import com.example.cashMarket.service.helpers.ExcelHelper;
+import org.hibernate.type.UUIDCharType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.AbstractList;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,9 +23,6 @@ public class ExcelService {
         try {
             List<Commodity> commodities = ExcelHelper.excelToCommodities(file.getInputStream());
             updateFields(commodities);
-//            System.out.println(commodities.size());
-//            commodityRepo.saveAll(commodities);
-//            commodityRepo.saveAll(updateFields(commodities));
         } catch (IOException e) {
             throw new RuntimeException("fail to store excel data: " + e.getMessage());
         }
@@ -42,16 +38,14 @@ public class ExcelService {
             if(commodityFromDB != null){
                 commodityEx.setId(commodityFromDB.getId());
                 commodityEx.setUuid(commodityFromDB.getUuid());
+                commodityEx.setUpdatedAt(LocalDateTime.now());
                 commodityRepo.save(commodityEx);
             } else {
-                commodityEx.setUuid(UUID.randomUUID());
+                commodityEx.setUuid(UUID.randomUUID().toString());
                 commodityEx.setCreatedAt(LocalDateTime.now());
                 commodityRepo.save(commodityEx);
             }
         }
     }
 
-     public boolean compaireValues(String valueEx, String valueDB) {
-        return false;
-     }
 }
