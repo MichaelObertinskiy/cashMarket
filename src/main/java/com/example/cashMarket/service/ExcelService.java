@@ -3,7 +3,6 @@ package com.example.cashMarket.service;
 import com.example.cashMarket.domain.Commodity;
 import com.example.cashMarket.repo.CommodityRepo;
 import com.example.cashMarket.service.helpers.ExcelHelper;
-import org.hibernate.type.UUIDCharType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;

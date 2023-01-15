@@ -1,15 +1,16 @@
 package com.example.cashMarket.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
-import javax.persistence.GeneratedValue;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "commodities")
@@ -32,9 +33,21 @@ public class Commodity {
     private String taxgroup;
     @Column(name = "groupOfGoods")
     private String groupOfGoods;
+    @Column(name = "trademark")
     private String trademark;
+    @Column(name = "cost")
     private Double cost;
+    @Column(name = "amount")
     private Double amount;
+
+    @ManyToMany(fetch = FetchType.LAZY,
+        cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+        },
+            mappedBy = "commodities")
+    @JsonIgnore
+    private Set<PriceList> priceLists = new HashSet<>();
 
     @Column(updatable = false, columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -48,9 +61,7 @@ public class Commodity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime deletedAt;
 
-    public Commodity() {
-
-    }
+    public Commodity() {}
 
     public Commodity(
             Integer id,
@@ -78,24 +89,6 @@ public class Commodity {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.deletedAt = deletedAt;
-    }
-
-    @Override
-    public String toString() {
-        return "Commodity{" +
-                "id=" + id +
-                ", uuid=" + uuid +
-                ", barcode='" + barcode + '\'' +
-                ", name='" + name + '\'' +
-                ", taxgroup='" + taxgroup + '\'' +
-                ", groupOfGoods='" + groupOfGoods + '\'' +
-                ", trademark='" + trademark + '\'' +
-                ", cost=" + cost +
-                ", amount=" + amount +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", deletedAt=" + deletedAt +
-                '}';
     }
 
     public Integer getId() {
@@ -194,5 +187,11 @@ public class Commodity {
         this.deletedAt = deletedAt;
     }
 
+    public Set<PriceList> getPriceLists() {
+        return priceLists;
+    }
 
+    public void setPriceLists(Set<PriceList> priceLists) {
+        this.priceLists = priceLists;
+    }
 }

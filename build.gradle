@@ -22,7 +22,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.projectlombok:lombok'
-	implementation 'javax.xml.bind:jaxb-api'
+	implementation 'javax.xml.bind:jaxb-api:2.3.0'
 	implementation 'org.projectlombok:lombok'
 	implementation 'com.sun.xml.bind:jaxb-core'
 	implementation group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '4.0.0-M4'
@@ -31,6 +31,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.2'
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.14.1'
+
 }
 
 test {

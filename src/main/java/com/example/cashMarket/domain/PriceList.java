@@ -4,13 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Table(name = "price_lists")
@@ -22,26 +20,75 @@ public class PriceList {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-    @GeneratedValue(generator = "UUID")
-    @Column(name = "uuid", updatable = false, nullable = false, columnDefinition = "VARCHAR(255)")
-    private UUID uuid;
-    private Integer userId;
-    @Column(length = 10000)
-    private String commoditiesListId;
-    private Float totalPrice;
-    private Integer amountOfPositions;
 
-    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
+    @Column(name = "uuid", updatable = false, columnDefinition = "VARCHAR(255)")
+    private String uuid;
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
+
+    @Column(name = "total_price")
+    private Double totalPrice;
+    @Column(name = "amount_of_positions")
+    private Integer amountOfPositions;
+    @Column(name = "weight")
+    private Double weight;
+
+    @ManyToMany(fetch = FetchType.LAZY,
+        cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+        })
+    @JoinTable(name = "price_list_commodities",
+    joinColumns = @JoinColumn(name = "price_list_id"),
+    inverseJoinColumns = @JoinColumn(name = "commodity_id"))
+    private Set<Commodity> commodities = new HashSet();
+
+    @Column(name = "created_at", columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
-    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
+    @Column(name = "updated_at", columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
-    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
+    @Column(name = "closed_at", columnDefinition = "TIMESTAMP")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime closedAt;
+
+    @Column(name = "deleted_at", columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime deletedAt;
+
+    public PriceList() {
+    }
+
+    public PriceList(
+            Integer id,
+            String uuid,
+            User userId,
+            Double totalPrice,
+            Integer amountOfPositions,
+            Double weight,
+            Set<Commodity> commodities,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt,
+            LocalDateTime closedAt,
+            LocalDateTime deletedAt
+    ) {
+        this.id = id;
+        this.uuid = uuid;
+        this.user = user;
+        this.totalPrice = totalPrice;
+        this.amountOfPositions = amountOfPositions;
+        this.weight = weight;
+        this.commodities = commodities;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.closedAt = closedAt;
+        this.deletedAt = deletedAt;
+    }
 
     public Integer getId() {
         return id;
@@ -51,35 +98,27 @@ public class PriceList {
         this.id = id;
     }
 
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(UUID uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(User userId) {
+        this.user = user;
     }
 
-    public String getCommoditiesListId() {
-        return commoditiesListId;
-    }
-
-    public void setCommoditiesListId(String commodities_id) {
-        this.commoditiesListId = commodities_id;
-    }
-
-    public Float getTotalPrice() {
+    public Double getTotalPrice() {
         return totalPrice;
     }
 
-    public void setTotalPrice(Float totalPrice) {
+    public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
     }
 
@@ -89,6 +128,14 @@ public class PriceList {
 
     public void setAmountOfPositions(Integer amountOfPositions) {
         this.amountOfPositions = amountOfPositions;
+    }
+
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -113,5 +160,21 @@ public class PriceList {
 
     public void setDeletedAt(LocalDateTime deletedAt) {
         this.deletedAt = deletedAt;
+    }
+
+    public Set<Commodity> getCommodities() {
+        return commodities;
+    }
+
+    public void setCommodities(Set<Commodity> commodities) {
+        this.commodities = commodities;
+    }
+
+    public LocalDateTime getClosedAt() {
+        return closedAt;
+    }
+
+    public void setClosedAt(LocalDateTime closedAt) {
+        this.closedAt = closedAt;
     }
 }

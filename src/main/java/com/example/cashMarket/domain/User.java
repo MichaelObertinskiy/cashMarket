@@ -8,7 +8,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.Set;
 
 @Entity
 @Table(name="users")
@@ -19,13 +19,23 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JsonView(Views.Id.class)
     private Integer id;
-    @GeneratedValue(generator = "UUID")
     @Column(name = "uuid", updatable = false, nullable = false, columnDefinition = "VARCHAR(255)")
-    private UUID uuid;
+    private String uuid;
+    @Column(name = "role")
+    private String role;
+    @Column(name = "is_blocked")
+    private Boolean isBlocked;
+    @Column(name = "code")
     private String code;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
+    @Column(name = "phone")
     private String phone;
+
+    @OneToMany(mappedBy = "user")
+    private Set<PriceList> priceList;
 
     @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -39,6 +49,9 @@ public class User {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime deletedAt;
 
+    public User() {
+    }
+
     public Integer getId() {
         return id;
     }
@@ -47,12 +60,28 @@ public class User {
         this.id = id;
     }
 
-    public UUID getUuid() {
+    public String getUuid() {
         return uuid;
     }
 
-    public void setUuid(UUID uuid) {
+    public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Boolean getBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(Boolean blocked) {
+        isBlocked = blocked;
     }
 
     public String getCode() {
@@ -85,6 +114,14 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Set<PriceList> getPriceList() {
+        return priceList;
+    }
+
+    public void setPriceList(Set<PriceList> priceList) {
+        this.priceList = priceList;
     }
 
     public LocalDateTime getCreatedAt() {

@@ -1,3 +1,9 @@
+import Vue from 'vue'
+
+new Vue ({
+    el: '#app'
+})
+/*
 Vue.component('commodity-row', {
     props: ['commodity'],
     template: '<div> </div>',
@@ -29,4 +35,4 @@ var app = new Vue({
     el: '#app',
     template: '<main-page />',
     data: {}
-});
+});*/
