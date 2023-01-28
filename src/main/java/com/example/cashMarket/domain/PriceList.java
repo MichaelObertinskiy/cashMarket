@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "price_lists")
@@ -25,7 +25,7 @@ public class PriceList {
     private String uuid;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user_id")
+    @JoinColumn(name="user_id", nullable = false)
     private User user;
 
     @Column(name = "total_price")
@@ -37,13 +37,12 @@ public class PriceList {
 
     @ManyToMany(fetch = FetchType.LAZY,
         cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
+            CascadeType.ALL
         })
     @JoinTable(name = "price_list_commodities",
     joinColumns = @JoinColumn(name = "price_list_id"),
     inverseJoinColumns = @JoinColumn(name = "commodity_id"))
-    private Set<Commodity> commodities = new HashSet();
+    private List<Commodity> commodities = new ArrayList<>();
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -65,29 +64,19 @@ public class PriceList {
     }
 
     public PriceList(
-            Integer id,
             String uuid,
-            User userId,
+            User user,
             Double totalPrice,
             Integer amountOfPositions,
             Double weight,
-            Set<Commodity> commodities,
-            LocalDateTime createdAt,
-            LocalDateTime updatedAt,
-            LocalDateTime closedAt,
-            LocalDateTime deletedAt
+            LocalDateTime createdAt
     ) {
-        this.id = id;
         this.uuid = uuid;
         this.user = user;
         this.totalPrice = totalPrice;
         this.amountOfPositions = amountOfPositions;
         this.weight = weight;
-        this.commodities = commodities;
         this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.closedAt = closedAt;
-        this.deletedAt = deletedAt;
     }
 
     public Integer getId() {
@@ -110,7 +99,7 @@ public class PriceList {
         return user;
     }
 
-    public void setUser(User userId) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -162,11 +151,11 @@ public class PriceList {
         this.deletedAt = deletedAt;
     }
 
-    public Set<Commodity> getCommodities() {
+    public List<Commodity> getCommodities() {
         return commodities;
     }
 
-    public void setCommodities(Set<Commodity> commodities) {
+    public void setCommodities(List<Commodity> commodities) {
         this.commodities = commodities;
     }
 
@@ -176,5 +165,28 @@ public class PriceList {
 
     public void setClosedAt(LocalDateTime closedAt) {
         this.closedAt = closedAt;
+    }
+
+    public void addCommodity(Commodity commodity) {
+        this.commodities.add(commodity);
+        commodity.getPriceLists().add(this);
+    }
+
+    public void removeCommodity(int commodityId) {
+        Commodity commodity = this
+                        .commodities
+                        .stream()
+                        .filter(t -> t.getId() == commodityId)
+                        .findFirst()
+                        .orElse(null);
+        while(commodities.contains(commodity)){
+            this.commodities.remove(commodity);
+            assert commodity != null;
+            commodity.getPriceLists().remove(this);
+        }
+//        if(commodity != null) {
+//            this.commodities.remove(commodity);
+//            commodity.getPriceLists().remove(this);
+//        }
     }
 }

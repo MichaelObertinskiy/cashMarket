@@ -2,17 +2,20 @@ package com.example.cashMarket.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name="users")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @ToString(of = {"firstName", "lastName"})
 public class User {
     @Id
@@ -34,22 +37,45 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
-    @OneToMany(mappedBy = "user")
-    private Set<PriceList> priceList;
-
     @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
-    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
+    @Column(updatable = false, columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
-    @Column(updatable = false, nullable = false, columnDefinition = "TIMESTAMP")
+    @Column(updatable = false, columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime deletedAt;
 
     public User() {
+    }
+
+    public User(
+            Integer id,
+            String uuid,
+            String role,
+            Boolean isBlocked,
+            String code,
+            String firstName,
+            String lastName,
+            String phone,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt,
+            LocalDateTime deletedAt
+    ) {
+        this.id = id;
+        this.uuid = uuid;
+        this.role = role;
+        this.isBlocked = isBlocked;
+        this.code = code;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phone = phone;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
     }
 
     public Integer getId() {
@@ -114,14 +140,6 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public Set<PriceList> getPriceList() {
-        return priceList;
-    }
-
-    public void setPriceList(Set<PriceList> priceList) {
-        this.priceList = priceList;
     }
 
     public LocalDateTime getCreatedAt() {

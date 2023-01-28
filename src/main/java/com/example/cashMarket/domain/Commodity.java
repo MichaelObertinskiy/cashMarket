@@ -5,12 +5,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "commodities")
@@ -39,15 +38,17 @@ public class Commodity {
     private Double cost;
     @Column(name = "amount")
     private Double amount;
+    @Column(name = "weight")
+    private Double weight;
+
 
     @ManyToMany(fetch = FetchType.LAZY,
         cascade = {
-            CascadeType.PERSIST,
-            CascadeType.MERGE
+            CascadeType.ALL
         },
             mappedBy = "commodities")
     @JsonIgnore
-    private Set<PriceList> priceLists = new HashSet<>();
+    private List<PriceList> priceLists = new ArrayList<>();
 
     @Column(updatable = false, columnDefinition = "TIMESTAMP")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
@@ -163,6 +164,14 @@ public class Commodity {
         this.amount = amount;
     }
 
+    public Double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Double weight) {
+        this.weight = weight;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -187,11 +196,13 @@ public class Commodity {
         this.deletedAt = deletedAt;
     }
 
-    public Set<PriceList> getPriceLists() {
+    public List<PriceList> getPriceLists() {
         return priceLists;
     }
 
-    public void setPriceLists(Set<PriceList> priceLists) {
+    public void setPriceLists(List<PriceList> priceLists) {
         this.priceLists = priceLists;
     }
+
+
 }

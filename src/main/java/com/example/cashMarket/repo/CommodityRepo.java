@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CommodityRepo extends JpaRepository<Commodity, Integer> {
     Commodity getCommodityByBarcode(String barcode);
-
 }

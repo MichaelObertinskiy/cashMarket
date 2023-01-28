@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PriceListRepo extends JpaRepository<PriceList, Integer> {
+    Boolean existsByUuid (String uuid);
+    PriceList findByUuid(String uuid);
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input type="button" value="Begin purchase" @click="newPurchase">
+    <input type="button" value="Enter User code" @click="enter">
   </div>
 </template>
 
