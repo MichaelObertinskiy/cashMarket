@@ -33,15 +33,6 @@ public class PriceListController {
         return "index";
     }
 
-    @GetMapping("price/{uuid}")
-    public ResponseEntity<PriceList> getPriceListByUuid (@PathVariable ("uuid") String uuid) {
-        PriceList priceList = priceListRepo.findByUuid("uuid");
-        if(priceList == null) {
-            throw new PriceListNotFoundException(uuid);
-        }
-        return new ResponseEntity<>(priceList, HttpStatus.OK);
-    }
-
     @PostMapping
     public ResponseEntity<PriceList> create(@RequestBody User user) {
         PriceList _priceList;
